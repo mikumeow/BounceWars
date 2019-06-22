@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using PlayerManager;
 
-#pragma warning disable 0618 //disable UNET warnings
+#pragma warning disable 0618 //ignore UNET warnings
 
 public class PlayerConnectionObject : NetworkMessageHandler
 {
@@ -17,13 +17,12 @@ public class PlayerConnectionObject : NetworkMessageHandler
     public Dictionary<int, GameObject> PlayerUnits { get; set; }
     //incrementa playerUnit ID
     public int playerUnitIDIncrem;
-
     
-
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("PlayerConnectionObject::Start");
         //register player to PlayerManager
         playerID = "player" + GetComponent<NetworkIdentity>().netId.ToString();
         transform.name = playerID;
@@ -38,7 +37,7 @@ public class PlayerConnectionObject : NetworkMessageHandler
             Camera.main.transform.position = transform.position + new Vector3(0, 0, -20);
             Camera.main.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-            RegisterNetworkMessages();
+            //RegisterNetworkMessages();
 
             //spawn the playerUnit?
             CmdSpawnMyUnit();
@@ -50,6 +49,7 @@ public class PlayerConnectionObject : NetworkMessageHandler
     }
     private void RegisterNetworkMessages()
     {
+        Debug.Log("PlayerConnectionObject on register network");
         NetworkManager.singleton.client.RegisterHandler(movement_msg, OnReceiveMovementMessage);
     }
     private void OnReceiveMovementMessage(NetworkMessage _message)

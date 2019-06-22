@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-#pragma warning disable 0618 //disable UNET warnings
+using UnityEngine.Networking.NetworkSystem;
+using PlayerManager;
+#pragma warning disable 0618 //ignore UNET warnings
 
 public class PlayerUnit : NetworkMessageHandler
 {
@@ -38,7 +40,7 @@ public class PlayerUnit : NetworkMessageHandler
         {
             canSendNetworkMovement = false;
         }
-        rb = GetComponentInChildren<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -107,6 +109,7 @@ public class PlayerUnit : NetworkMessageHandler
             CmdUpdateVelocity(velocity, transform.position);
         }
         //move
+        /*
         if (Input.GetKeyDown(KeyCode.D))
         {
             velocity = new Vector3(1, 0, 0);
@@ -118,14 +121,18 @@ public class PlayerUnit : NetworkMessageHandler
             velocity = new Vector3(-1, 0, 0);
             //rb.velocity += velocity;
             CmdUpdateVelocity(velocity, transform.position);
-        }
+        }*/
     }
 
     private void UpdatePlayerMovement()
     {
         var y = Input.GetAxis("Horizontal") * Time.deltaTime * 20;
         var x = Input.GetAxis("Vertical") * Time.deltaTime * 20;
-        var z = Input.GetAxis("Rotational") * Time.deltaTime * 20;
+        var z = 0;
+        if (y != 0)
+        {
+            Debug.Log(y);
+        }
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {

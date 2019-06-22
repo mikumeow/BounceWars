@@ -44,25 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4d6ce46b590b24bbb420c578ddf088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 
-  PlayerUnitPrefab: {fileID: 1114914797372017556, guid: 6c037873459cb0847984925df375dc3c,
+  PlayerUnitPrefab: {fileID: 6403666614836801455, guid: add4deed12fec564fa3a81a46f50fc26,
     type: 3}
-  canSendNetworkMovement: 0
-  speed: 0
-  networkSendRate: 5
-  timeBetweenMovementStart: 0
-  timeBetweenMovementEnd: 0
-  distance: 15
-  xSpeed: 60
-  ySpeed: 120
-  isLerpingPosition: 0
-  isLerpingRotation: 0
-  realPosition: {x: 0, y: 0, z: 0}
-  realRotation: {x: 0, y: 0, z: 0, w: 0}
-  lastRealPosition: {x: 0, y: 0, z: 0}
-  lastRealRotation: {x: 0, y: 0, z: 0, w: 0}
-  timeStartedLerping: 0
-  timeToLerp: 0
+  playerID: 
+  playerUnitIDIncrem: 0
 --- !u!114 &4597027227894027065
 MonoBehaviour:
   m_ObjectHideFlags: 0

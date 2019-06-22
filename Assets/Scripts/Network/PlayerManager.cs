@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-#pragma warning disable 0618 //disable UNET warnings
+#pragma warning disable 0618 //ignore UNET warnings
 
 namespace PlayerManager
 {

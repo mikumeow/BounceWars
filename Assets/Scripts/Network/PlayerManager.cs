@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 #pragma warning disable 0618 //ignore UNET warnings
 
-namespace PlayerManager
+namespace PlayerManagerSpc
 {
-    public class Manager
+    public class PlayerManager
     {
-        private static Manager _instance;
+        private static PlayerManager _instance;
         public Dictionary<string, GameObject> ConnectedPlayers { get; set; }
 
         public int NumberConnectedPlayers { get; private set; }
 
         public string PlayerID { get; private set; }
 
-        private Manager()
+        private PlayerManager()
         {
             if (_instance != null)
             {
@@ -28,13 +28,13 @@ namespace PlayerManager
             _instance = this;
         }
 
-        public static Manager Instance
+        public static PlayerManager Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    new Manager();
+                    new PlayerManager();
                 }
 
                 return _instance;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
-using PlayerManager;
+using PlayerUnitManagerSpc;
 #pragma warning disable 0618 //ignore UNET warnings
 
 public class PlayerUnit : NetworkMessageHandler
@@ -12,9 +12,9 @@ public class PlayerUnit : NetworkMessageHandler
     public Rigidbody rb;
     Vector3 velocity;
 
-
-    public String playerID { set; get; }
-    public int playerUnitID { set; get; }
+    private String playerID;
+    private String unitID;
+    
 
     [Header("Ship Movement Properties")]
     public bool canSendNetworkMovement;
@@ -33,20 +33,52 @@ public class PlayerUnit : NetworkMessageHandler
     public float timeStartedLerping;
     public float timeToLerp;
 
+    public string getUnitID()
+    {
+        return this.unitID;
+    }
+    public string getPlayerID()
+    {
+        return this.playerID;
+    }
+    public void setPlayerID(string _playerID)
+    {
+        this.playerID = _playerID;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
-        if (isLocalPlayer)
+        //rb = GetComponent<Rigidbody>();
+        unitID = "playerUnit" + GetComponent<NetworkIdentity>().netId.ToString();
+        transform.name = unitID;
+        PlayerUnitManager.Instance.AddUnit(unitID, gameObject);
+    }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+
+        if (hasAuthority)
         {
             canSendNetworkMovement = false;
         }
-        rb = GetComponent<Rigidbody>();
-    }
+        else
+        {
+            isLerpingPosition = false;
+            isLerpingRotation = false;
 
+            realPosition = transform.position;
+            realRotation = transform.rotation;
+        }
+    }
 
     //change opsition info
     public void ReceiveMovementMessage(Vector3 _position, Quaternion _rotation, float _timeToLerp)
     {
+        //Debug.Log("Receive Msg" + unitID +"  Pos" + _position + "  Rot" + _rotation);
+        //Debug.Log("Transform  " + unitID + "  Pos" + transform.position);
         lastRealPosition = realPosition;
         lastRealRotation = realRotation;
         realPosition = _position;
@@ -87,13 +119,12 @@ public class PlayerUnit : NetworkMessageHandler
     // Update is called once per frame
     void Update()
     {
-
-        if (!hasAuthority)
+        if (!hasAuthority)//hasAuthority
         {
             return;
         }
-
         UpdatePlayerMovement();
+        /*
         //delete object
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -109,7 +140,6 @@ public class PlayerUnit : NetworkMessageHandler
             CmdUpdateVelocity(velocity, transform.position);
         }
         //move
-        /*
         if (Input.GetKeyDown(KeyCode.D))
         {
             velocity = new Vector3(1, 0, 0);
@@ -123,16 +153,20 @@ public class PlayerUnit : NetworkMessageHandler
             CmdUpdateVelocity(velocity, transform.position);
         }*/
     }
+    private void FixedUpdate()
+    {
+        if (!hasAuthority)//hasAuthority
+        {
+            NetworkLerp();
+            return;
+        }
+    }
 
     private void UpdatePlayerMovement()
     {
-        var y = Input.GetAxis("Horizontal") * Time.deltaTime * 20;
+        var z = Input.GetAxis("Horizontal") * Time.deltaTime * 20;
         var x = Input.GetAxis("Vertical") * Time.deltaTime * 20;
-        var z = 0;
-        if (y != 0)
-        {
-            Debug.Log(y);
-        }
+        var y = 0;
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
@@ -168,21 +202,21 @@ public class PlayerUnit : NetworkMessageHandler
         yield return new WaitForSeconds((1 / networkSendRate));
         SendNetworkMovement();
     }
-
+    
     private void SendNetworkMovement()
     {
         timeBetweenMovementEnd = Time.time;
-        SendMovementMessage(playerID, playerUnitID, transform.position, transform.rotation, (timeBetweenMovementEnd - timeBetweenMovementStart));
+        //Debug.Log("Player Unit sending, ID" + unitID);
+        SendMovementMessage(unitID, transform.position, transform.rotation, (timeBetweenMovementEnd - timeBetweenMovementStart));
         canSendNetworkMovement = false;
     }
 
-    public void SendMovementMessage(string _playerID,int _playerUnitID, Vector3 _position, Quaternion _rotation, float _timeTolerp)
+    public void SendMovementMessage(string _playerUnitID, Vector3 _position, Quaternion _rotation, float _timeTolerp)
     {
         PlayerMovementMessage _msg = new PlayerMovementMessage()
         {
             objectPosition = _position,
             objectRotation = _rotation,
-            targetPlayerID = _playerID,
             playerUnitID = _playerUnitID,
             time = _timeTolerp
         };
@@ -202,7 +236,6 @@ public class PlayerUnit : NetworkMessageHandler
     [ClientRpc]
     void RpcUpdateVelocity(Vector3 v, Vector3 p)
     {
-        Debug.Log("PlayerUnit:: ClientRPC");
         //Owner of object don't update again
         if (hasAuthority)
             return;

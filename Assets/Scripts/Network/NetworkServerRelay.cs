@@ -9,7 +9,10 @@ public class NetworkServerRelay : NetworkMessageHandler
 {
     private void Start()
     {
-
+        if (isServer)
+        {
+            RegisterNetworkMessages();
+        }
     }
 
     public void RegisterNetworkMessages()
@@ -20,8 +23,10 @@ public class NetworkServerRelay : NetworkMessageHandler
 
     private void OnReceivePlayerMovementMessage(NetworkMessage _message)
     {
+        //Debug.Log("Server message");
         //dispatch this message to all players.
         PlayerMovementMessage _msg = _message.ReadMessage<PlayerMovementMessage>();
+        //Debug.Log("Server receive  message,  Target  " + _msg.playerUnitID);
         NetworkServer.SendToAll(movement_msg, _msg);
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
-using PlayerManager;
+using PlayerManagerSpc;
 
 #pragma warning disable 0618 //disable UNET warnings
 
 public class PlayerObjectTest : NetworkMessageHandler
-{
+{/*
     [Header("Player Properties")]
     public string playerID;
 
@@ -214,5 +214,5 @@ public class PlayerObjectTest : NetworkMessageHandler
 
             transform.rotation = Quaternion.Lerp(lastRealRotation, realRotation, lerpPercentage);
         }
-    }
+    }*/
 }

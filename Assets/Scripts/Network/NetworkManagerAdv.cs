@@ -12,14 +12,14 @@ public class NetworkManagerAdv : NetworkManager
     public override void OnServerConnect(NetworkConnection conn)
     {
         Debug.Log("OnServerConnect");
-        networkServerRelay.GetComponent<NetworkServerRelay>().RegisterNetworkMessages();
+        //networkServerRelay.GetComponent<NetworkServerRelay>().RegisterNetworkMessages();
         base.OnServerConnect(conn);
     }
 
     public override void OnClientConnect(NetworkConnection conn)
     {
         Debug.Log("OnClientConnect");
-        networkServerRelay.GetComponent<NetworkServerRelay>().RegisterNetworkMessages();
+        //networkServerRelay.GetComponent<NetworkServerRelay>().RegisterNetworkMessages();
         base.OnClientConnect(conn);
 
     }

@@ -11,8 +11,7 @@ public class NetworkMessageHandler : NetworkBehaviour
 
     public class PlayerMovementMessage : MessageBase
     {
-        public string targetPlayerID;
-        public int playerUnitID;
+        public string playerUnitID;
         public Vector3 objectPosition;
         public Quaternion objectRotation;
         public float time;
